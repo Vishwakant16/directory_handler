@@ -64,6 +64,5 @@ node* insertion(node* head,string name,string folderName) {
     }
 }
 int main(){
-    cout<<" Hello ";
     return 0;
 }
