@@ -74,7 +74,118 @@ Node* insertion(Node* head,string name, string type, string folderName) {
     }
     return head;  
 }
-
+//display Total Files
+void Display_Files(Node* head){
+    while(head){
+        if(head->subFiles){
+            Node* dummy=head->subFiles;
+            cout<<"Folder: "<<endl;
+            while(dummy){
+                cout<<dummy->Name<<endl;
+                dummy=dummy->next;
+            }
+        }
+        if(!head->subFiles){
+            if(head->file){
+                cout<<head->Name<<endl;
+            }
+        }
+        head=head->next;
+    }
+}
+//display Total Folders
+void display_Folders(Node* head){
+    cout<<"Folders"<<endl;
+    while(head){
+        if(!head->file){
+            cout<<head->Name<<endl;
+        }
+        head=head->next;
+    }
+}
+//displaying Total Files of Particular folder
+void display_files_folders(Node* head,string folderName){
+    cout<<"Files of this folder: "<<folderName<<endl;
+    Node* dummy=head;
+    while(dummy){
+        if(dummy->Name!=folderName){
+            dummy=dummy->next;
+        }
+        else break;
+    }
+    if(!dummy){
+        cout<<"Error: Folder doesn't exist"<<endl;
+    }
+    else{
+        //Printing Files of the Folder if exist
+        head=dummy->subFiles;
+        while (head) {
+            cout << head->Name << endl;
+            head=head->next;
+        }
+    }
+}
+//Searching Folders
+bool findingFolders(Node* head,string folderName){
+    while(head){
+        if(head->Name!=folderName){
+            head=head->next;
+        }
+        else break;
+    }
+}
+//searching Files
+bool findingFiles(Node* head,string fileName){
+    Node* dummy;
+    while(head){
+        dummy=head->subFiles;
+        if(head->subFiles){
+            while (dummy) {
+                if (dummy->Name != fileName) {
+                    dummy = dummy->next;
+                }
+                else break;
+            }
+        }
+        else{
+            if(head->Name==fileName){
+                return true;
+            }
+        }
+        head=head->next;
+    }
+    if(!dummy){
+        return false;
+    }
+    else{
+        return true;
+    }
+}
+//Delete Folder
+Node* deleteFolder(Node* head,string folderName){
+    if(head->Name==folderName){
+        head=head->next;
+    }
+    else{
+        Node* prev=head;
+        Node* temp=head->next;
+        while(temp){
+            if(temp->Name!=folderName){
+                temp=temp->next;
+                prev=prev->next;
+            }
+            else{
+                break;
+            }
+        }
+        prev->next=temp->next;
+    }
+    return head;
+}
+//Delete files
+Node* deleteFiles(Node* head,string fileName){
+    
+}
 // Main function
 int main(){
     Node * head=NULL;
