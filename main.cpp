@@ -36,18 +36,22 @@ Node* insertion(Node* head,string name, string type, string folderName) {
                 new_Node->next = head;
                 head = new_Node;
             }
-            cout<<endl<<"File Inserted Successfully!";
         }
         
         // insertion of file inside particular folder
         else {
             Node *temp = head;
-            Node *dummy;
+            Node *dummy=NULL;
             while (temp) {
                 temp = temp->next;
                 if (temp->Name == folderName) {
                     dummy = temp;
+                    break;
                 }
+            }
+            if(dummy==NULL){
+                cout<<"folder does not exist in the directory: "<<endl;
+                return head;
             }
             if (!dummy->subFiles) {
                 dummy->subFiles = new_Node;
@@ -79,7 +83,7 @@ void Display_Files(Node* head){
     while(head){
         if(head->subFiles){
             Node* dummy=head->subFiles;
-            cout<<"Folder: "<<endl;
+            cout<<"Folder: "<<head->Name<<endl;
             while(dummy){
                 cout<<dummy->Name<<endl;
                 dummy=dummy->next;
@@ -131,12 +135,13 @@ bool findingFolders(Node* head,string folderName){
         if(head->Name!=folderName){
             head=head->next;
         }
-        else break;
+        else return true;
     }
+    return false;
 }
 //searching Files
 bool findingFiles(Node* head,string fileName){
-    Node* dummy;
+    Node* dummy=NULL;
     while(head){
         dummy=head->subFiles;
         if(head->subFiles){
@@ -144,22 +149,17 @@ bool findingFiles(Node* head,string fileName){
                 if (dummy->Name != fileName) {
                     dummy = dummy->next;
                 }
-                else break;
+                else return true;
             }
         }
         else{
-            if(head->Name==fileName){
+            if(head->Name==fileName && head->file){
                 return true;
             }
         }
         head=head->next;
     }
-    if(!dummy){
-        return false;
-    }
-    else{
-        return true;
-    }
+    return false;
 }
 //Delete Folder
 Node* deleteFolder(Node* head,string folderName){
@@ -184,43 +184,81 @@ Node* deleteFolder(Node* head,string folderName){
 }
 //Delete files
 Node* deleteFiles(Node* head,string fileName){
-    
+    if(head->file && head->Name==fileName){
+        head=head->next;
+        return head;
+    }
+    Node* prev=head;
+    Node* temp=head->next;
+    while(temp){
+        if(temp->file){
+
+        }
+        else{
+
+        }
+    }
 }
 // Main function
 int main(){
     Node * head=NULL;
     string fName;
     int i;
-    cout<<"Press 1 to insert Folder."<<endl;
-    cout<<"Press 2 to insert File."<<endl;
-    cin>>i;
-    switch(i){
-        case 1:
-            cout<<endl<<"Enter the name of the folder to be inserted: ";
-            cin>>fName;
-            insertion(head,fName,"folder","NULL");
-            break;
-        case 2:
-            char ch;
-            cout<<endl<<"Entre the name of the file to be inserted: ";
-            cin>>fName;
-            cout<<endl<<"Press a to insert a file directly.";
-            cout<<endl<<"Press b to insert file inside any existing folder.";
-            cin>>ch;
-            switch(ch){
-                case 'a':
-                    insertion(head,fName,"file","NULL");
-                    break;
-                case 'b':
-                    string folderName;
-                    cout<<endl<<"Enter the folder name: ";
-                    cin>>folderName;
-                    insertion(head,fName,"file",folderName);
-                    break;
-            }
-            break;
-        default:
-            cout<<endl<<"Invalid Input!";
-        }     
+    char ans;
+    do {
+        cout << "Press 1 to insert Folder." << endl;
+        cout << "Press 2 to insert File." << endl;
+        cin >> i;
+        switch (i) {
+            case 1:
+                cout << endl << "Enter the name of the folder to be inserted: ";
+                cin >> fName;
+                head = insertion(head, fName, "folder", "NULL");
+                break;
+            case 2:
+                char ch;
+                cout << endl << "Entre the name of the file to be inserted: ";
+                cin >> fName;
+                cout << endl << "Press a to insert a file directly.";
+                cout << endl << "Press b to insert file inside any existing folder.";
+                cin >> ch;
+                switch (ch) {
+                    case 'a':
+                        head = insertion(head, fName, "file", "NULL");
+                        break;
+                    case 'b':
+                        string folderName;
+                        cout << endl << "Enter the folder name: ";
+                        cin >> folderName;
+                        head = insertion(head, fName, "file", folderName);
+                        break;
+                }
+                break;
+            default:
+                cout << endl << "Invalid Input!";
+        }
+        cout<<endl<<"Do you want to insert More ?";
+        cin>>ans;
+    }while(ans == 'y' || ans == 'Y');
+    Display_Files(head);
+    display_Folders(head);
+    string folderName;
+    cout<<"Enter folderName to find:"<<endl;
+    cin>>folderName;
+    if(findingFolders(head,folderName)){
+        cout<<"folder exist: "<<endl;
+    }
+    else{
+        cout<<"folder doesn't exist: "<<endl;
+    }
+    string fileName;
+    cout<<"Enter file name"<<endl;
+    cin>>fileName;
+    if(findingFiles(head,fileName)){
+        cout<<"File exist: "<<endl;
+    }
+    else {
+        cout << "File doesn't exist: " << endl;
+    }
     return 0;
 }

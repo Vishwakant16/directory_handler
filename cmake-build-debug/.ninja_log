@@ -1,0 +1,21 @@
+# ninja log v5
+0	941	6903648341961997	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+946	1320	6903648345821339	directory_handler.exe	201a18c70ce6e837
+23	588	6903649370509099	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+589	766	6903649372221515	directory_handler.exe	201a18c70ce6e837
+3	268	6903652078241715	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+268	366	6903652079188117	directory_handler.exe	201a18c70ce6e837
+8	530	6903656438843936	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+531	705	6903656440526508	directory_handler.exe	201a18c70ce6e837
+7	492	6903659136595695	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+493	652	6903659138122366	directory_handler.exe	201a18c70ce6e837
+4	461	6903660956465926	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+462	650	6903660958258291	directory_handler.exe	201a18c70ce6e837
+3	300	6903663162976095	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+301	413	6903663164063469	directory_handler.exe	201a18c70ce6e837
+97	390	6903666104024514	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+391	498	6903666105062756	directory_handler.exe	201a18c70ce6e837
+4	369	6903667218639133	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+369	466	6903667219576279	directory_handler.exe	201a18c70ce6e837
+5	315	6903672167880374	CMakeFiles/directory_handler.dir/main.cpp.obj	707154afd3f74c34
+316	431	6903672169016588	directory_handler.exe	201a18c70ce6e837
