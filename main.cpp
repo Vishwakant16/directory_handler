@@ -21,11 +21,53 @@ public:
         }
     }
 };
-
+//Searching Folders
+bool findingFolders(Node* head,string folderName){
+    while(head){
+        if(head->Name!=folderName){
+            head=head->next;
+        }
+        else return true;
+    }
+    return false;
+}
+//searching Files
+bool findingFiles(Node* head,string fileName){
+    Node* dummy=NULL;
+    while(head){
+        dummy=head->subFiles;
+        if(head->subFiles){
+            while (dummy) {
+                if (dummy->Name != fileName) {
+                    dummy = dummy->next;
+                }
+                else return true;
+            }
+        }
+        else{
+            if(head->Name==fileName && head->file){
+                return true;
+            }
+        }
+        head=head->next;
+    }
+    return false;
+}
 Node* insertion(Node* head,string name, string type, string folderName) {
     
     Node *new_Node = new Node(name, type);    
-    
+    if(new_Node->file){
+        if(findingFiles(head,new_Node->Name)){
+            cout<<"File already exist: "<<endl;
+            return head;
+        }
+    }
+    else{
+        if(findingFolders(head,new_Node->Name)){
+            cout<<"Folder already exist: "<<endl;
+            return head;
+        }
+    }
     // direct file insertion
     if (new_Node->file==true) {
         if(folderName == "NULL"){
@@ -43,14 +85,14 @@ Node* insertion(Node* head,string name, string type, string folderName) {
             Node *temp = head;
             Node *dummy=NULL;
             while (temp) {
-                temp = temp->next;
                 if (temp->Name == folderName) {
                     dummy = temp;
                     break;
                 }
+                temp = temp->next;
             }
             if(dummy==NULL){
-                cout<<"folder does not exist in the directory: "<<endl;
+                cout<<"OOPS! "<<folderName<<" does not exist in the Directory: "<<endl;
                 return head;
             }
             if (!dummy->subFiles) {
@@ -63,6 +105,7 @@ Node* insertion(Node* head,string name, string type, string folderName) {
                 // return dummy->subFiles;
             }
         }
+        system("cls");
         cout<<endl<<"File Inserted Successfully!";
     }
     // folder insertion
@@ -74,6 +117,7 @@ Node* insertion(Node* head,string name, string type, string folderName) {
             new_Node->next=head;
             head=new_Node;
         }
+        system("cls");
         cout<<endl<<"Folder inserted successfully!";
     }
     return head;  
@@ -129,38 +173,6 @@ void display_files_folders(Node* head,string folderName){
         }
     }
 }
-//Searching Folders
-bool findingFolders(Node* head,string folderName){
-    while(head){
-        if(head->Name!=folderName){
-            head=head->next;
-        }
-        else return true;
-    }
-    return false;
-}
-//searching Files
-bool findingFiles(Node* head,string fileName){
-    Node* dummy=NULL;
-    while(head){
-        dummy=head->subFiles;
-        if(head->subFiles){
-            while (dummy) {
-                if (dummy->Name != fileName) {
-                    dummy = dummy->next;
-                }
-                else return true;
-            }
-        }
-        else{
-            if(head->Name==fileName && head->file){
-                return true;
-            }
-        }
-        head=head->next;
-    }
-    return false;
-}
 //Delete Folder
 Node* deleteFolder(Node* head,string folderName){
     if(head->Name==folderName){
@@ -180,22 +192,49 @@ Node* deleteFolder(Node* head,string folderName){
         }
         prev->next=temp->next;
     }
+    cout<<"Folder deleted successfully: "<<endl;
     return head;
 }
 //Delete files
 Node* deleteFiles(Node* head,string fileName){
     if(head->file && head->Name==fileName){
         head=head->next;
+        cout<<"File deleted successfully: "<<endl;
         return head;
     }
-    Node* prev=head;
-    Node* temp=head->next;
+    Node* temp=head;
     while(temp){
-        if(temp->file){
-
+        Node *prev,*dummy;
+        if(!temp->file){
+            if(head->subFiles->Name==fileName){
+                head->subFiles=head->subFiles->next;
+                cout<<"File deleted successfully: "<<endl;
+                return head;
+            }
+            prev=head->subFiles;
+            dummy=head->subFiles->next;
+            while(dummy){
+                if(dummy->Name==fileName){
+                    prev->next=dummy->next;
+                    cout<<"File deleted successfully: "<<endl;
+                    return head;
+                }
+                prev=prev->next;
+                dummy=dummy->next;
+            }
         }
         else{
-
+            prev=temp;
+            dummy=temp->next;
+            while(dummy){
+                if(dummy->Name==fileName){
+                    prev->next=dummy->next;
+                    cout<<"File deleted successfully: "<<endl;
+                    return head;
+                }
+                prev=prev->next;
+                dummy=dummy->next;
+            }
         }
     }
 }
@@ -240,25 +279,5 @@ int main(){
         cout<<endl<<"Do you want to insert More ?";
         cin>>ans;
     }while(ans == 'y' || ans == 'Y');
-    Display_Files(head);
-    display_Folders(head);
-    string folderName;
-    cout<<"Enter folderName to find:"<<endl;
-    cin>>folderName;
-    if(findingFolders(head,folderName)){
-        cout<<"folder exist: "<<endl;
-    }
-    else{
-        cout<<"folder doesn't exist: "<<endl;
-    }
-    string fileName;
-    cout<<"Enter file name"<<endl;
-    cin>>fileName;
-    if(findingFiles(head,fileName)){
-        cout<<"File exist: "<<endl;
-    }
-    else {
-        cout << "File doesn't exist: " << endl;
-    }
     return 0;
 }
