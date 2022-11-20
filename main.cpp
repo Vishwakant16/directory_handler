@@ -341,8 +341,7 @@ int main(){
                     default:
                         cout << endl << "Invalid Input!";
                     }
-
-                    cout<<endl<<"Press 'Y' if you want to continue: ";
+                    cout<<endl<<"Press 'Y' if you want to Delete more Files or Folders: ";
                     cin>>ans;
                 }while(ans == 'y' || ans == 'Y');
             break;
@@ -351,7 +350,7 @@ int main(){
             cout<<endl<<" Invalid input! ";
         }
 
-        cout<<endl<<"Press 'Y' if you want to Delete more Files or Folders: ";
+        cout<<endl<<"Press 'Y' if you want to continue: ";
         cin>>ans;
     }while(ans == 'y' || ans == 'Y');
     return 0;
