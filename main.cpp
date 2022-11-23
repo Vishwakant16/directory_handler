@@ -23,10 +23,9 @@ public:
 };
 
 //Searching Folders
-bool findingFolders(Node* head){
-    string folderName;
-    cout<<"Enter folderName to find:"<<endl;        
-    cin>>folderName;
+bool findingFolders(Node* head,string folderName){
+    // cout<<"Enter folderName to find:"<<endl;        
+    // cin>>folderName;
         while(head){
         if(head->Name!=folderName){
             head=head->next;
@@ -36,11 +35,11 @@ bool findingFolders(Node* head){
     return false;
 }
 //searching Files
-bool findingFiles(Node* head){
-    string fileName;
+bool findingFiles(Node* head,string fileName){
+    
     Node* dummy=NULL;
-    cout<<"Enter file name to find"<<endl;
-    cin>>fileName;
+    // cout<<"Enter file name to find"<<endl;
+    // cin>>fileName;
     while(head){
         dummy=head->subFiles;
         if(head->subFiles){
@@ -61,22 +60,78 @@ bool findingFiles(Node* head){
     return false;
 }
 
+bool Update_folders(Node* head){
+    string OldFolderName;
+    string NewFolderName;
+    cout<<"Which folder you want to Update? "<<endl;        
+    cin>>OldFolderName;
+        while(head){
+        if(head->Name!=OldFolderName){
+            head=head->next;
+        }
+        else{
+            cout<< endl << "Enter the new name of "<<OldFolderName<<": ";
+            cin>>NewFolderName;
+            head->Name = NewFolderName; 
+            return true;
+
+        }
+    }
+    return false;
+}
+
+bool Update_files(Node* head){
+    Node* dummy=NULL;
+    string OldFileName;
+    string NewFileName;
+    cout<<"Which File you want to Update: "<<endl;
+    cin>>OldFileName;
+    while(head){
+        dummy=head->subFiles;
+        if(head->subFiles){
+            while (dummy) {
+                if (dummy->Name != OldFileName) {
+                    dummy = dummy->next;
+                }
+                else {
+                    cout<< endl << "Enter the new name of "<<OldFileName<<": ";
+                    cin>>NewFileName;
+                    dummy->Name=NewFileName;
+                    return true;
+                }
+            }
+        }
+        else{
+            if(head->Name==OldFileName && head->file){
+                cout<< endl << "Enter the new name of "<<OldFileName<<": ";
+                cin>>NewFileName;
+                return true;
+            }
+        }
+        head=head->next;
+    }
+    return false;
+}
+
+
 // Inssertion
-Node* insertion(Node* head,string name, string type, string folderName) {
-    
+Node* insertion(Node* head, string type, string folderName) {
+    string name;
+    cout<<"Enter the name of File or folder to be inserted: ";
+    cin>>name;
     Node *new_Node = new Node(name, type);    
-    // if(new_Node->file){
-    //     if(findingFiles(head)){
-    //         cout<<"File already exist: "<<endl;
-    //         return head;
-    //     }
-    // }
-    // else{
-    //     if(findingFolders(head)){
-    //         cout<<"Folder already exist: "<<endl;
-    //         return head;
-    //     }
-    // }
+    if(new_Node->file){
+        if(findingFiles(head,name)){
+            cout<<"File already exist: "<<endl;
+            return head;
+        }
+    }
+    else{
+        if(findingFolders(head,name)){
+            cout<<"Folder already exist: "<<endl;
+            return head;
+        }
+    }
     // direct file insertion
     if (new_Node->file==true) {
         if(folderName == "NULL"){
@@ -135,7 +190,11 @@ Node* insertion(Node* head,string name, string type, string folderName) {
 
 //display Total Files
 void Display_Files(Node* head){
-    while(head){
+    if(!head){
+        cout<<endl<<"Directory is Empty.";
+    }
+    else{
+        while(head){
         Node* dummy=head->subFiles;
         cout<<head->Name<<endl;
         if(head->subFiles){
@@ -145,34 +204,42 @@ void Display_Files(Node* head){
             }
         }
         head=head->next;
+        }
     }
 }
 
 //Delete Folder
-Node* deleteFolder(Node* head,string folderName){
-    if(head->Name==folderName){
-        head=head->next;
-    }
-    else{
-        Node* prev=head;
-        Node* temp=head->next;
-        while(temp){
-            if(temp->Name!=folderName){
-                temp=temp->next;
-                prev=prev->next;
-            }
-            else{
-                break;
-            }
-        }
-        prev->next=temp->next;
-        delete temp;
-    }
-    cout<<"Folder deleted successfully: "<<endl;
-    return head;
-}
+// Node* deleteFolder(Node* head,string folderName){
+//     if(head->Name==folderName){
+//         head=head->next;
+//     }
+//     else{
+//         Node* prev=head;
+//         Node* temp=head->next;
+//         while(temp){
+//             if(temp->Name!=folderName){
+//                 temp=temp->next;
+//                 prev=prev->next;
+//             }
+//             else{
+//                 break;
+//             }
+//         }
+//         prev->next=temp->next;
+//         delete temp;
+//     }
+//     cout<<"Folder deleted successfully: "<<endl;
+//     return head;
+// }
 //Delete files
-Node* deleteFiles(Node* head,string fileName){
+Node* deleteFiles(Node* head){
+    string fileName;
+    if(!head){
+        cout<<endl<<"Directory is Empty";
+        return head;
+    }
+    cout<<endl<<" Enter the name of the file or folder to delete: ";
+    cin>>fileName;
     if(head->file && head->Name==fileName){
         head=head->next;
         cout<<"File deleted successfully: "<<endl;
@@ -200,6 +267,9 @@ Node* deleteFiles(Node* head,string fileName){
             }
         }
         else{
+            if(temp->Name==fileName){
+                temp=temp->next;
+            }
             prev=temp;
             dummy=temp->next;
             while(dummy){
@@ -214,77 +284,84 @@ Node* deleteFiles(Node* head,string fileName){
         }
     }
 }
+
+
 // Main function
 int main(){
     Node * head=NULL;
     int options;
     char ans;
+    string fileName;
     do{
         cout<<endl<<" Press '1' to insert..";
         cout<<endl<<" Press '2' to search file or folder..";
         cout<<endl<<" Press '3' to Display..";
         cout<<endl<<" Press '4' to Delete..";
+        cout<<endl<<" Press '5' to Update..";
         cout<<endl<<"Enter your choice here :) ";
         cin>>options;
         
         switch (options){
         case 1:
-        system("cls");
-        cout<<endl<<"Great! You have chosen INSERTION Operation. "<<endl;
-        char ans;
-        int i;
-        do {
-            cout <<endl<< "Press 1 to insert Folder in the Directory." << endl;
-            cout << "Press 2 to insert File in the Directory." << endl;
-            cout<<"Enter your choice :) ";
-            cin >> i;
-            switch (i) {
-                case 1:
-                    string InsertfName;
-                    cout << endl << "Enter the name of the folder to be inserted: ";
-                    cin >> InsertfName;
-                    head = insertion(head, InsertfName, "folder", "NULL");
-                    break;
-                case 2:
-                    char ch;
-                    cout << endl << "Entre the name of the file to be inserted: ";
-                    cin >> InsertfName;
-                    cout << endl << "Press a to insert a file directly.";
-                    cout << endl << "Press b to insert file inside any existing folder.";
-                    cout<<endl<<"Enter your choice :) ";
-                    cin >> ch;
-                    switch (ch) {
-                        case 'a':
-                            head = insertion(head, InsertfName, "file", "NULL");
-                            break;
-                        case 'b':
-                            string folderName;
-                            cout << endl << "Enter the folder name in which you want to insert "<<"'"<<InsertfName<<"': ";
-                            cin >> folderName;
-                            head = insertion(head, InsertfName, "file", folderName);
-                            break;
-                        }
-                    break;
-                default: 
-                    cout << endl << "Invalid Input!";
-            }
-            cout<<endl<<"Press 'Y' if you want to insert More: ";
-            cin>>ans;
-        }while(ans == 'y' || ans == 'Y');
-        break;
+            system("cls");
+            cout<<endl<<"Great! You have chosen INSERTION Operation. "<<endl;
+            char ans;
+            int i;
+            do {
+                cout <<endl<< "Press 1 to insert Folder in the Directory." << endl;
+                cout << "Press 2 to insert File in the Directory." << endl;
+                cout<<"Enter your choice :) ";
+                cin >> i;
+                switch (i) {
+                    case 1:
+                        // string InsertfName;
+                        // cout << endl << "Enter the name of the folder to be inserted: ";
+                        // cin >> InsertfName;
+                        head = insertion(head, "folder", "NULL");
+                        break;
+                    case 2:
+                        char ch;
+                        // cout << endl << "Entre the name of the file to be inserted: ";
+                        // cin >> InsertfName;
+                        cout << endl << "Press a to insert a file directly.";
+                        cout << endl << "Press b to insert file inside any existing folder.";
+                        cout<<endl<<"Enter your choice :) ";
+                        cin >> ch;
+                        switch (ch) {
+                            case 'a':
+                                head = insertion(head, "file", "NULL");
+                                break;
+                            case 'b':
+                                string folderName;
+                                cout << endl << "Enter the folder name in which you want to insert the file: ";
+                                cin >> folderName;
+                                head = insertion(head, "file", folderName);
+                                break;
+                            }
+                        break;
+                    default: 
+                        cout << endl << "Invalid Input!";
+                }
+                cout<<endl<<"Press 'Y' if you want to insert More: ";
+                cin>>ans;
+            }while(ans == 'y' || ans == 'Y');
+            break;
 
         case 2:
         system("cls");
         cout<<endl<<"Great! You have chosen SEARCHING Operation. "<<endl;
-        char ans,ch;
+        char ch;
+        
         do{
             cout<<endl<<"Press a to search any File: ";
-            cout<<endl<<"Press b to search any Foler: ";
+            cout<<endl<<"Press b to search any Folder: ";
             cout<<endl<<"Enter your choice: ";
             cin>>ch;
             switch(ch){
-                case 'a':           
-                    if(findingFiles(head)){
+                case 'a':     
+                    cout<<endl<<"Enter the file name to Search: ";
+                    cin>>fileName;      
+                    if(findingFiles(head,fileName)){
                         cout<<"File exist: "<<endl;
                     }
                     else {
@@ -293,7 +370,9 @@ int main(){
                     break;
 
                 case 'b':
-                    if(findingFolders(head)){
+                    cout<<endl<<"Enter the folder name to Search: ";
+                    cin>>fileName;
+                    if(findingFolders(head,fileName)){
                         cout<<"folder exist: "<<endl;
                     }
                     else{
@@ -317,34 +396,46 @@ int main(){
         case 4:
             system("cls");
             cout<<endl<<"Great! you have chosen DELETION Operation. ";
-            char ch;
-            string DeletefName;
+            do{                
+                head=deleteFiles(head);
+                cout<<endl<<"Press 'Y' if you want to Delete more Files or Folders: ";
+                cin>>ans;
+                }while(ans == 'y' || ans == 'Y');
+            break;
+
+        case 5:
+            system("cls");
+            cout<<endl<<"Great! you have chosen UPDATION Operation. ";
             do{
-                cout<<endl<<"Great! You have chosen SEARCHING Operation. "<<endl;
-                cout<<endl<<"Press a to Delete any File: ";
-                cout<<endl<<"Press b to Delete any Foler: ";
+                cout<<endl<<"Press a to update any File: ";
+                cout<<endl<<"Press b to update any Folder: ";
                 cout<<endl<<"Enter your choice: ";
                 cin>>ch;
                 switch(ch){
-                    case 'a':
-                        cout << endl << "Entre the name of the file to delete: ";
-                        cin >> DeletefName;
-                        deleteFiles(head,DeletefName);
+                    case 'a':           
+                        if(Update_files(head)){
+                            cout<<"Updated Successfully. "<<endl;
+                        }
+                        else {
+                            cout << "File doesn't exist: " << endl;
+                        }
                         break;
 
                     case 'b':
-                        cout << endl << "Entre the name of the folder to delete: ";
-                        cin >> DeletefName;
-                        deleteFiles(head,DeletefName);
+                        if(Update_folders(head)){
+                            cout<<"Update successfully. "<<endl;
+                        }
+                        else{
+                            cout<<"folder doesn't exist: "<<endl;
+                        }
                         break;
-
                     default:
-                        cout << endl << "Invalid Input!";
-                    }
-                    cout<<endl<<"Press 'Y' if you want to Delete more Files or Folders: ";
-                    cin>>ans;
-                }while(ans == 'y' || ans == 'Y');
-            break;
+                        cout << endl << "Invalid Input!"; 
+                }
+                cout<<endl<<"Press 'Y' if you want to Update More Files and folders: ";
+                cin>>ans;
+            }while(ans == 'y' || ans == 'Y');
+        break;
 
         default: 
             cout<<endl<<" Invalid input! ";
