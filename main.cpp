@@ -293,11 +293,16 @@ int main(){
     char ans;
     string fileName;
     do{
-        cout<<endl<<" Press '1' to insert..";
-        cout<<endl<<" Press '2' to search file or folder..";
-        cout<<endl<<" Press '3' to Display..";
-        cout<<endl<<" Press '4' to Delete..";
-        cout<<endl<<" Press '5' to Update..";
+        // cout<<endl<<"\t\t\t\t\t*******************";
+        cout<<endl<<"\t\t\t\t\t LIST OF CHOICES";
+        cout<<endl<<"\t\t\t\t\t*****************";
+        cout<<endl<<"--------------------------------------------------------------------------------------------------------------------------------------";
+        cout<<endl<<"\t\t\t\t\t Press '1' to insert..";
+        cout<<endl<<"\t\t\t\t\t Press '2' to search file or folder..";
+        cout<<endl<<"\t\t\t\t\t Press '3' to Display..";
+        cout<<endl<<"\t\t\t\t\t Press '4' to Delete..";
+        cout<<endl<<"\t\t\t\t\t Press '5' to Update..";
+        cout<<endl<<"--------------------------------------------------------------------------------------------------------------------------------------";
         cout<<endl<<"Enter your choice here :) ";
         cin>>options;
         
