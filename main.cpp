@@ -1,5 +1,8 @@
 #include <iostream>
 #include<windows.h>
+#include<vector>
+#include<algorithm>
+#include<map>
 using namespace std;
 
 // Structure of Node
@@ -89,38 +92,6 @@ bool Update_folders(Node* head){
     return false;
 }
 
-bool Update_files(Node* head){
-    Node* dummy=NULL;
-    string OldFileName;
-    string NewFileName;
-    cout<<"Which File you want to Update: "<<endl;
-    cin>>OldFileName;
-    while(head){
-        dummy=head->subFiles;
-        if(head->subFiles){
-            while (dummy) {
-                if (dummy->Name != OldFileName) {
-                    dummy = dummy->next;
-                }
-                else {
-                    cout<< endl << "Enter the new name of "<<OldFileName<<": ";
-                    cin>>NewFileName;
-                    dummy->Name=NewFileName;
-                    return true;
-                }
-            }
-        }
-        else{
-            if(head->Name==OldFileName && head->file){
-                cout<< endl << "Enter the new name of "<<OldFileName<<": ";
-                cin>>NewFileName;
-                return true;
-            }
-        }
-        head=head->next;
-    }
-    return false;
-}
 
 // Insertion
 Node* insertion(Node* head, string name,string type, string folderName) {
@@ -196,7 +167,7 @@ Node* insertion(Node* head, string name,string type, string folderName) {
 //display Total Files
 void Display_Files(Node* head){
     cout<<endl;
-    cout<<"\t\t\t\t\t\t\t***DIRECTORY***\n\n";
+    cout<<"\t\t\t\t\t\t\t*** DIRECTORY ***\n\n";
     if(!head){
         cout<<endl<<"Directory is Empty.";
     }
@@ -250,67 +221,124 @@ Node* deleteFolder(Node* head,string folderName){
     return head;
 }
 //Delete files
+// Node* deleteFiles(Node* head,string fileName){
+//     // cout<<"HIII";
+//     if(!findingFiles(head,fileName)){
+//         cout<<endl<<"OOPS! "<<fileName<<" does not exist.. ";
+//         return head;
+//     }
+//     Node* temp=head;
+//     while(temp){
+//         if(!temp->file){
+//             Node* dummyPrev=temp->subFiles;
+//             Node* dummy=temp->subFiles->next;
+//             if(temp->subFiles->Name==fileName){
+//                 temp->subFiles=temp->subFiles->next;
+//                 return head;
+//             }
+//             while(dummy){
+//                 if(dummy->Name==fileName){
+//                     dummyPrev->next=dummy->next;
+//                     return head;
+//                 }
+//                 dummy=dummy->next;
+//                 dummyPrev=dummyPrev->next;
+//             }
+//         }
+//         else if(!temp->subFiles && temp->file){
+//             if(temp->Name==fileName && temp==head){
+//                 temp=temp->next;
+//                 return temp;
+//             }
+//         }
+//     }
+//     return head;
+// }
 Node* deleteFiles(Node* head,string fileName){
-    
-    Node* temp=head;
-    bool chk = isEmpty(head);
-    if(chk){
-        cout<<endl<<"Directory is Empty";
-        return head;
-    }
     if(!findingFiles(head,fileName)){
-        cout<<endl<<"OOPS! "<<fileName<<" is not present in the Directory..";
+        cout<<endl<<"OOPS! "<<fileName<<" does not exist.. ";
         return head;
     }
-    // if we have to delete the first file which is not in any folder
-    if(head->file && head->Name==fileName){
-        head=head->next;
-        cout<<"File deleted successfully: "<<endl;
-        return head;
-    }
+    Node* temp=head;
     while(temp){
-        Node *prev,*dummy;
-        if(!temp->file){
-            if(head->subFiles->Name==fileName){
-                head->subFiles=head->subFiles->next;
-                cout<<"File deleted successfully: "<<endl;
+    if(temp->file && temp->Name==fileName){
+        temp=temp->next;
+        cout<<endl<<"File deleted successfully... ";
+        return temp;
+    }
+    if(!temp->file && temp->subFiles){
+        if(temp->subFiles->Name==fileName){
+            temp->subFiles=temp->subFiles->next;
+            cout<<endl<<"File deleted successfully... ";
+            return head;
+        }
+        Node* dummyprev=temp->subFiles;
+        Node* dummy=temp->subFiles->next;
+        while(dummy){
+            if(dummy->Name==fileName){
+                dummyprev->next=dummy->next;
+                cout<<endl<<"File deleted successfully... ";
                 return head;
             }
-            prev=head->subFiles;
-            dummy=head->subFiles->next;
-            while(dummy){
-                if(dummy->Name==fileName){
-                    prev->next=dummy->next;
-                    cout<<"File deleted successfully: "<<endl;
-                    return head;
+            dummyprev=dummyprev->next;
+            dummy=dummy->next;
+        }
+    }
+    Node* prev=temp;
+    Node* curr=temp->next;
+    if(curr->file && curr->Name==fileName){
+        prev->next=curr->next;
+        cout<<endl<<"File deleted successfully... ";
+        return head;
+    }
+    temp=temp->next;
+}
+    return head;
+}
+bool UpdateFileName(Node* head){
+    Node* dummy=NULL;
+    string OldFileName;
+    string NewFileName;
+    cout<<"Which File you want to Update: "<<endl;
+    cin>>OldFileName;
+    if(!findingFiles(head,OldFileName)){
+        cout<<endl<<"OOPS! "<<OldFileName<<" Does not exists ";
+    }
+    cout<< endl << "Enter the new name of "<<OldFileName<<": ";
+    cin>>NewFileName;
+    if(findingFiles(head,NewFileName)){
+        cout<<endl<<"OOPS! "<<NewFileName<<" already exists.. ";
+        exit;
+    }
+    while(head){
+        dummy=head->subFiles;
+        if(head->subFiles){
+            while (dummy) {
+                if (dummy->Name != OldFileName) {
+                    dummy = dummy->next;
                 }
-                prev=prev->next;
-                dummy=dummy->next;
+                else {
+                    
+                    dummy->Name=NewFileName;
+                    return true;
+                }
             }
         }
         else{
-            if(temp->Name==fileName){
-                temp=temp->next;
-            }
-            prev=temp;
-            dummy=temp->next;
-            while(dummy){
-                if(dummy->Name==fileName){
-                    prev->next=dummy->next;
-                    cout<<"File deleted successfully: "<<endl;
-                    return head;
-                }
-                prev=prev->next;
-                dummy=dummy->next;
+            if(head->Name==OldFileName && head->file){
+                return true;
             }
         }
+        head=head->next;
     }
-    return head;
+    return false;
 }
+
+
 Node* updateFileLocation(Node* head,string fileName){
     string newFolder;
     char ch;
-    cout<<endl<<"hiiiiiii";
+    // cout<<endl<<"hiiiiiii";
     head = deleteFiles(head,fileName);
     system("cls");
     cout<<endl<<"Press a to move "<<fileName<<" Outside the current folder..";
@@ -325,7 +353,7 @@ Node* updateFileLocation(Node* head,string fileName){
             break;
         
         case 'b':
-        cout<<endl<<"Hiooiiiii";
+        // cout<<endl<<"Hiooiiiii";
             cout<<endl<<"Enter the new folder name in which you want to insert "<<fileName<<": ";
             cin>>newFolder;
             head = insertion(head, fileName,"file", newFolder);
@@ -337,15 +365,171 @@ Node* updateFileLocation(Node* head,string fileName){
             return head;
     }
 }
-    
-// }
-
+void sortingFolderFiles(Node* head,string folderName,char ch){
+    Node* temp=head;
+    if(findingFolders(head,folderName)){
+       while(temp){
+        if(temp->Name==folderName){
+            break;
+        }
+        temp=temp->next;
+       }
+       vector<string> v;
+       temp=temp->subFiles;
+       if(!temp){
+        cout<<endl<<folderName<<" Folder is empty ";
+        return;
+       }
+       else{
+        while(temp){
+            v.push_back(temp->Name);
+            temp=temp->next;
+        }
+        //'a' for sorting files in ascending order
+        if(ch=='a'){
+            sort(v.begin(),v.end());
+        }
+        //'b' for sorting files in descending order
+        else if(ch=='b'){
+            sort(v.begin(),v.end(),greater<string>());
+        }
+        //displaying sorted files
+        for(auto i: v){
+            cout<<"\t"<<i<<endl;
+        }
+       }
+    }
+    else{
+       cout<<endl<<"invalid input: ";
+       return;
+    }
+}
+//Sorting Directory
+void sortingDirectory(Node* head,char ch){
+    cout<<endl;
+    cout<<"\t\t\t\t\t\t\t*** DIRECTORY ***\n\n";
+    map<string,Node*> m;
+    Node* temp=head;
+    //Mapping the name of files/folders with their address
+    while(temp){
+        m[temp->Name]=temp;
+        temp=temp->next;
+    }
+    vector<string> v;
+    temp=head;
+    while(temp){
+        v.push_back(temp->Name);
+        temp=temp->next;
+    }
+    //'a' for sorting in ascending order..
+    if(ch=='a'){
+        sort(v.begin(),v.end());
+    }
+    //'b' for sorting in descending order..
+    else{
+        sort(v.begin(),v.end(),greater<string>());
+    }
+    cout<<endl;
+    for(auto i: v){
+        cout<<"\t\t\t"<<i<<endl;
+        if(m[i]->subFiles){
+            sortingFolderFiles(head,i,ch);
+        }
+    }
+}
 // Main function
 int main(){
-system("cls");
-cout<<"\n\n\n\n\n\n\n\n\n\n\n";
+    Node * head=NULL;
+    
+// DATABASE of Directory......
+    
+    //Existing File in the Directory..
+    head = insertion(head,"Certificate","file", "NULL");
+    head = insertion(head,"Volvo","file", "NULL");
+    head = insertion(head,"File","file", "NULL");
+    head = insertion(head,"Project","file", "NULL");
+    
+    // Existing folders in the Directory..
+
+    head = insertion(head, "Books","folder", "NULL");
+    head = insertion(head, "Instruments","folder", "NULL");
+    system("cls");
+    head = insertion(head, "Sports","folder", "NULL");
+    head = insertion(head, "Cars","folder", "NULL");
+    head = insertion(head, "Movies","folder", "NULL");
+    system("cls");
+    
+    // existing file
+    head = insertion(head,"Samsung","file", "NULL");
+    
+    // existing Files in the Directory folders...
+
+        // inside Books
+        head = insertion(head, "Hamlet", "file", "Books");
+        head = insertion(head, "Emma", "file", "Books");
+        head = insertion(head, "Dracula", "file", "Books");
+        head = insertion(head, "Holes", "file", "Books");
+        system("cls");
+        head = insertion(head, "Carrie", "file", "Books");
+        head = insertion(head, "Beloved", "file", "Books");
+        head = insertion(head, "Watchman", "file", "Books");
+        head = insertion(head, "Dune", "file", "Books");
+        head = insertion(head, "Stardust", "file", "Books");
+        system("cls");
+
+        // inside Instruments;
+        head = insertion(head, "Tabla", "file", "Instruments");
+        head = insertion(head, "Congo", "file", "Instruments");
+        head = insertion(head, "Guitar", "file", "Instruments");
+        head = insertion(head, "Banjo", "file", "Instruments");
+        head = insertion(head, "Flute", "file", "Instruments");
+        head = insertion(head, "Piano", "file", "Instruments");
+        head = insertion(head, "Harmonium", "file", "Instruments");
+        head = insertion(head, "Drums", "file", "Instruments");
+        head = insertion(head, "Trumpet", "file", "Instruments");
+        system("cls");
+
+        // inside Sports
+        head = insertion(head, "Cricket", "file", "Sports");
+        head = insertion(head, "Football", "file", "Sports");
+        head = insertion(head, "Hockey", "file", "Sports");
+        head = insertion(head, "Volleyball", "file", "Sports");
+        head = insertion(head, "Basketball", "file", "Sports");
+        head = insertion(head, "Surffing", "file", "Sports");
+        head = insertion(head, "Tennis", "file", "Sports");
+        head = insertion(head, "Badminton", "file", "Sports");
+        head = insertion(head, "Golf", "file", "Sports");
+        system("cls");
+
+        // inside Cars
+        head = insertion(head, "BMW", "file", "Cars");
+        head = insertion(head, "Jaguar", "file", "Cars");
+        head = insertion(head, "Audi", "file", "Cars");
+        head = insertion(head, "LandRover", "file", "Cars");
+        system("cls");
+        head = insertion(head, "Ferrari", "file", "Cars");
+        head = insertion(head, "Mercedes", "file", "Cars");
+        head = insertion(head, "Porsche", "file", "Cars");
+        head = insertion(head, "Lamborghini", "file", "Cars");
+        head = insertion(head, "McLaren", "file", "Cars");
+        system("cls");
+
+        // inside Movies
+        head = insertion(head, "TopGun", "file", "Movies");
+        head = insertion(head, "Matrix", "file", "Movies");
+        head = insertion(head, "Arthur", "file", "Movies");
+        head = insertion(head, "Avtaar", "file", "Movies");
+        system("cls");
+        head = insertion(head, "HarryPotter", "file", "Movies");
+        head = insertion(head, "Bolt", "file", "Movies");
+        head = insertion(head, "Drive", "file", "Movies");
+        head = insertion(head, "Venom", "file", "Movies");
+        head = insertion(head, "Frozen", "file", "Movies");
+        system("cls");
+
+    cout<<"\n\n\n\n\n\n\n\n\n\n\n";
     cout<<"\t\t\t\t\tLoading Directory";
-    char x=219;
+    char x=46;
     for(int i=0;i<35;i++){
         cout<<x;
         if(i<10)
@@ -355,17 +539,13 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
         if(i>=10)
             Sleep(25);
     }
-
-
-    Node * head=NULL;
+    
     int options;
     char ans;
     string FileName;
-    // string InsertFileName;
-    // string SearchfileName;
+    
     do{
         system("cls");
-        // cout<<endl<<"\t\t\t\t\t*******************";
         cout<<endl<<"\t\t\t\t\t LIST OF CHOICES";
         cout<<endl<<"\t\t\t\t\t*****************";
         cout<<endl<<"--------------------------------------------------------------------------------------------------------------------------------------";
@@ -374,6 +554,7 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
         cout<<endl<<"\t\t\t\t\t Press '3' to Delete..";
         cout<<endl<<"\t\t\t\t\t Press '4' to Display..";
         cout<<endl<<"\t\t\t\t\t Press '5' to Update..";
+        cout<<endl<<"\t\t\t\t\t Press '6' to Sort Files and Folder..";
         cout<<endl<<"--------------------------------------------------------------------------------------------------------------------------------------";
         cout<<endl<<"Enter your choice here :) ";
         cin>>options;
@@ -495,6 +676,7 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
                 Display_Files(head);
                 cout<<endl<<"Press 'Y' if you want to Display again. "<<endl;
                 cin>>ans;
+                system("cls");
                 }while(ans == 'y' || ans == 'Y');
             break;
 
@@ -509,21 +691,21 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
                 cin>>ch;
                 switch(ch){
                     case 'a':           
-                        if(Update_files(head)){
+                        if(UpdateFileName(head)){
                             cout<<"Updated Successfully. "<<endl;
                         }
-                        else {
-                            cout << "File doesn't exist: " << endl;
-                        }
+                        // else {
+                        //     cout << "File doesn't exist: " << endl;
+                        // }
                         break;
 
                     case 'b':
                         if(Update_folders(head)){
                             cout<<"Update successfully. "<<endl;
                         }
-                        else{
-                            cout<<"folder doesn't exist: "<<endl;
-                        }
+                        // else{
+                        //     cout<<"folder doesn't exist: "<<endl;
+                        // }
                         break;
                     
                     case 'c':
@@ -540,11 +722,64 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
             }while(ans == 'y' || ans == 'Y');
         break;
 
+        case 6:
+            system("cls");
+            cout<<endl<<"Great! you have chosen SORTING Operation. "<<endl;
+            do{
+                cout<<endl<<"Press a to Sort Files of a particular folder in Asceding Order. ";
+                cout<<endl<<"Press b to Sort Files of a particular folder in Desceding Order. ";
+                cout<<endl<<"Press c to Sort Directory. ";
+                cout<<endl<<"Enter your Choice:  ";
+                cin>>ch;
+
+                switch(ch){
+                    case 'a':
+                        cout<<endl<<"Files of Which Folder you want to Sort in ascending order:  ";
+                        cin>>FileName;
+                        sortingFolderFiles(head,FileName,ch);
+                        break;
+
+                    case 'b':
+                        cout<<endl<<"Files of Which Folder you want to Sort in descending order:  ";
+                        cin>>FileName;
+                        sortingFolderFiles(head,FileName,ch);
+                        break;
+                    
+                    case 'c':
+                        char c;
+                        cout<<endl<<"Press a to Sort the Directory in Ascending order: ";
+                        cout<<endl<<"Press b to Sort the Directory in Descending order: ";
+                        cout<<endl<<"Enter your choice:  ";
+                        cin>>c;
+                        system("cls");
+                        switch(c){
+                            case 'a':
+                                sortingDirectory(head,c); 
+                                break;
+                            
+                            case 'b':
+                                sortingDirectory(head,c); 
+                                break;
+                            
+                            default:
+                                cout<<endl<<"Invalid Input!";
+                        }
+                        break;
+
+                    default:
+                        cout<<endl<<"Invalid Input!";
+                }
+                cout<<endl<<"Press 'Y' if you want to Update More Files and folders: ";
+                cin>>ans;
+                system("cls");
+            }while(ans == 'y' || ans == 'Y');
+        break;
+
         default: 
             cout<<endl<<" Invalid input! ";
         }
 
-        cout<<endl<<"Press 'Y' if you want to continue: ";
+        cout<<endl<<"Press 'Y' to go at Home Page... ";
         cin>>ans;
     }while(ans == 'y' || ans == 'Y');
     return 0;
