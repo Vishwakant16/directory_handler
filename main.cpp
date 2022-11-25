@@ -5,10 +5,11 @@ using namespace std;
 // Structure of Node
 class Node{
 public:
-    string Name;//insertion name
-    Node* next;//outer boundary
-    Node* subFiles;//location of files in folder
-    bool file;//check weather inserted Node is representing file or folder
+    string Name;    //Node name
+    Node* next;     //outer boundary
+    Node* subFiles; //location of files in folder
+    bool file;      //check weather inserted Node is representing file or folder
+    
     //constructor
     Node(string name,string type) {
         this->Name=name;
@@ -121,7 +122,7 @@ bool Update_files(Node* head){
     return false;
 }
 
-// Inssertion
+// Insertion
 Node* insertion(Node* head, string name,string type, string folderName) {
     Node *new_Node = new Node(name, type);    
     if(new_Node->file){
@@ -194,13 +195,15 @@ Node* insertion(Node* head, string name,string type, string folderName) {
 
 //display Total Files
 void Display_Files(Node* head){
+    cout<<endl;
+    cout<<"\t\t\t\t\t\t\t***DIRECTORY***\n\n";
     if(!head){
         cout<<endl<<"Directory is Empty.";
     }
     else{
         while(head){
         Node* dummy=head->subFiles;
-        cout<<endl;
+        // cout<<endl;
         cout<<head->Name<<endl;
         if(head->subFiles){
             while(dummy){
@@ -285,29 +288,31 @@ Node* deleteFiles(Node* head,string fileName){
                 dummy=dummy->next;
             }
         }
-        // else{
-        //     if(temp->Name==fileName){
-        //         temp=temp->next;
-        //     }
-        //     prev=temp;
-        //     dummy=temp->next;
-        //     while(dummy){
-        //         if(dummy->Name==fileName){
-        //             prev->next=dummy->next;
-        //             cout<<"File deleted successfully: "<<endl;
-        //             return head;
-        //         }
-        //         prev=prev->next;
-        //         dummy=dummy->next;
-        //     }
-        // }
+        else{
+            if(temp->Name==fileName){
+                temp=temp->next;
+            }
+            prev=temp;
+            dummy=temp->next;
+            while(dummy){
+                if(dummy->Name==fileName){
+                    prev->next=dummy->next;
+                    cout<<"File deleted successfully: "<<endl;
+                    return head;
+                }
+                prev=prev->next;
+                dummy=dummy->next;
+            }
+        }
     }
     return head;
 }
 Node* updateFileLocation(Node* head,string fileName){
     string newFolder;
     char ch;
+    cout<<endl<<"hiiiiiii";
     head = deleteFiles(head,fileName);
+    system("cls");
     cout<<endl<<"Press a to move "<<fileName<<" Outside the current folder..";
     cout<<endl<<"Press b to move "<<fileName<<" to another folder..";
     cout<<endl<<"Enter your choice:) ";
@@ -320,7 +325,8 @@ Node* updateFileLocation(Node* head,string fileName){
             break;
         
         case 'b':
-            cout<<endl<<"Enter the new folder name in which you want to insert "<<fileName;
+        cout<<endl<<"Hiooiiiii";
+            cout<<endl<<"Enter the new folder name in which you want to insert "<<fileName<<": ";
             cin>>newFolder;
             head = insertion(head, fileName,"file", newFolder);
             return head;
@@ -328,8 +334,9 @@ Node* updateFileLocation(Node* head,string fileName){
 
         default:
             cout<<endl<<"Invalid Input!";
+            return head;
     }
-    }
+}
     
 // }
 
@@ -445,7 +452,7 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
                         cout<<"folder exist :) "<<endl;
                     }
                     else{
-                        cout<<FileName<<" is not present in the Directory. "<<endl;
+                        cout<<"file '"<<FileName<<"' is not present in the Directory. "<<endl;
                     }
                     break;
                 default:
@@ -453,6 +460,7 @@ cout<<"\n\n\n\n\n\n\n\n\n\n\n";
             }
             cout<<endl<<"Press 'Y' if you want to Search More Files and folders: ";
             cin>>ans;
+            system("cls");
         }while(ans == 'y' || ans == 'Y');
         break;
 
