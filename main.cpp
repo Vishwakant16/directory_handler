@@ -307,7 +307,6 @@ bool UpdateFileName(Node* head){
 Node* updateFileLocation(Node* head,string fileName){
     string newFolder;
     char ch;
-    // cout<<endl<<"hiiiiiii";
     head = deleteFiles(head,fileName);
     system("cls");
     cout<<endl<<"Press a to move "<<fileName<<" Outside the current folder..";
@@ -322,7 +321,6 @@ Node* updateFileLocation(Node* head,string fileName){
             break;
         
         case 'b':
-        // cout<<endl<<"Hiooiiiii";
             cout<<endl<<"Enter the new folder name in which you want to insert "<<fileName<<": ";
             cin>>newFolder;
             head = insertion(head, fileName,"file", newFolder);
@@ -692,8 +690,8 @@ int main(){
             system("cls");
             cout<<endl<<"Great! you have chosen SORTING Operation. "<<endl;
             do{
-                cout<<endl<<"Press a to Sort Files of a particular folder in Asceding Order. ";
-                cout<<endl<<"Press b to Sort Files of a particular folder in Desceding Order. ";
+                cout<<endl<<"Press a to Sort Files of a particular folder in Ascending Order. ";
+                cout<<endl<<"Press b to Sort Files of a particular folder in Descending Order. ";
                 cout<<endl<<"Press c to Sort Directory. ";
                 cout<<endl<<"Enter your Choice:  ";
                 cin>>ch;
