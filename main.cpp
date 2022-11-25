@@ -221,39 +221,7 @@ Node* deleteFolder(Node* head,string folderName){
     return head;
 }
 //Delete files
-// Node* deleteFiles(Node* head,string fileName){
-//     // cout<<"HIII";
-//     if(!findingFiles(head,fileName)){
-//         cout<<endl<<"OOPS! "<<fileName<<" does not exist.. ";
-//         return head;
-//     }
-//     Node* temp=head;
-//     while(temp){
-//         if(!temp->file){
-//             Node* dummyPrev=temp->subFiles;
-//             Node* dummy=temp->subFiles->next;
-//             if(temp->subFiles->Name==fileName){
-//                 temp->subFiles=temp->subFiles->next;
-//                 return head;
-//             }
-//             while(dummy){
-//                 if(dummy->Name==fileName){
-//                     dummyPrev->next=dummy->next;
-//                     return head;
-//                 }
-//                 dummy=dummy->next;
-//                 dummyPrev=dummyPrev->next;
-//             }
-//         }
-//         else if(!temp->subFiles && temp->file){
-//             if(temp->Name==fileName && temp==head){
-//                 temp=temp->next;
-//                 return temp;
-//             }
-//         }
-//     }
-//     return head;
-// }
+
 Node* deleteFiles(Node* head,string fileName){
     if(!findingFiles(head,fileName)){
         cout<<endl<<"OOPS! "<<fileName<<" does not exist.. ";
@@ -303,12 +271,13 @@ bool UpdateFileName(Node* head){
     cin>>OldFileName;
     if(!findingFiles(head,OldFileName)){
         cout<<endl<<"OOPS! "<<OldFileName<<" Does not exists ";
+        return false;
     }
     cout<< endl << "Enter the new name of "<<OldFileName<<": ";
     cin>>NewFileName;
     if(findingFiles(head,NewFileName)){
         cout<<endl<<"OOPS! "<<NewFileName<<" already exists.. ";
-        exit;
+        return false;
     }
     while(head){
         dummy=head->subFiles;
@@ -663,6 +632,9 @@ int main(){
                     cout<<endl<<"Enter the Folder name to Delete: ";
                     cin>>FileName;
                     head = deleteFolder(head,FileName);
+
+                default:
+                    cout<<endl<<"Invalid Input!";
             }
             cout<<endl<<"Press 'Y' if you want to Delete More Files and folders: ";
             cin>>ans;
@@ -694,18 +666,12 @@ int main(){
                         if(UpdateFileName(head)){
                             cout<<"Updated Successfully. "<<endl;
                         }
-                        // else {
-                        //     cout << "File doesn't exist: " << endl;
-                        // }
                         break;
 
                     case 'b':
                         if(Update_folders(head)){
                             cout<<"Update successfully. "<<endl;
                         }
-                        // else{
-                        //     cout<<"folder doesn't exist: "<<endl;
-                        // }
                         break;
                     
                     case 'c':
